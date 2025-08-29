@@ -1,3 +1,4 @@
+import { Timestamp } from 'next/dist/server/lib/cache-handlers/types'
 import { NextRequest, NextResponse } from 'next/server'
 
 type User = {
@@ -7,7 +8,7 @@ type User = {
 	role: string
 	department: string
 	isOnline: boolean
-	lastActivity: string
+	lastActivity: number
 }
 
 const mockUsers: User[] = [
@@ -18,7 +19,7 @@ const mockUsers: User[] = [
 		role: 'Senior Developer',
 		department: 'Engineering',
 		isOnline: true,
-		lastActivity: '2024-01-15T10:30:00Z',
+		lastActivity: new Date('2024-01-15T10:30:00Z').getTime(),
 	},
 	{
 		id: 2,
@@ -27,7 +28,7 @@ const mockUsers: User[] = [
 		role: 'Product Manager',
 		department: 'Product',
 		isOnline: false,
-		lastActivity: '2024-01-15T09:15:00Z',
+		lastActivity: new Date('2024-01-15T09:15:00Z').getTime(),
 	},
 	{
 		id: 3,
@@ -36,7 +37,7 @@ const mockUsers: User[] = [
 		role: 'Designer',
 		department: 'Design',
 		isOnline: true,
-		lastActivity: '2024-01-15T10:45:00Z',
+		lastActivity: new Date('2024-01-15T10:45:00Z').getTime(),
 	},
 	{
 		id: 4,
@@ -45,7 +46,7 @@ const mockUsers: User[] = [
 		role: 'DevOps Engineer',
 		department: 'Engineering',
 		isOnline: false,
-		lastActivity: '2024-01-14T16:20:00Z',
+		lastActivity: new Date('2024-01-14T16:20:00Z').getTime(),
 	},
 ]
 
@@ -54,9 +55,9 @@ export async function GET(request: NextRequest) {
 	const department = searchParams.get('department')
 
 	try {
-		if (Math.random() < 0.15) {
-			return NextResponse.json({ error: 'Internal server error', users: [] }, { status: 200 })
-		}
+		// if (Math.random() < 0.15) {
+		// 	return NextResponse.json({ error: 'Internal server error', users: [] }, { status: 500 })
+		// }
 
 		let filteredUsers = mockUsers
 
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
 		})
 	} catch (error) {
 		console.log('Some error happened')
-		return NextResponse.json({ error: 'Something went wrong' }, { status: 200 })
+		return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
 	}
 }
 

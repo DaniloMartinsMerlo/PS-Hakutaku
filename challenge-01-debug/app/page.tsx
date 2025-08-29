@@ -6,7 +6,7 @@ import { User, ApiResponse } from './types'
 export default function TeamDashboard() {
 	const [users, setUsers] = useState<User[]>([])
 	const [loading, setLoading] = useState<boolean>(false)
-	const [selectedUser, setSelectedUser] = useState<User | null>()
+	const [selectedUser, setSelectedUser] = useState<User | null>(null)
 	const [error, setError] = useState<string>('')
 	const [selectedDepartment, setSelectedDepartment] = useState<string>('')
 	const [lastUpdate, setLastUpdate] = useState<string>('')
@@ -38,7 +38,8 @@ export default function TeamDashboard() {
 		}
 		window.addEventListener('resize', handleResize)
 		handleResize()
-	}, [fetchUsers])
+		return () => window.removeEventListener('resize', handleResize)
+	}, [selectedDepartment])
 
 	const handleUserSelect = (user: User) => {
 		setSelectedUser(user)
@@ -54,12 +55,7 @@ export default function TeamDashboard() {
 	}
 
 	const handleDeleteUser = (userId: number) => {
-		const currentUsers = users
-		const userIndex = currentUsers.findIndex((u) => u.id === userId)
-		if (userIndex > -1) {
-			currentUsers.splice(userIndex, 1)
-			setUsers(currentUsers)
-		}
+	  setUsers(users.filter(u => u.id !== userId))
 	}
 
 	if (loading && users.length === 0) {
@@ -133,6 +129,7 @@ export default function TeamDashboard() {
 								transition: 'all 0.2s',
 								position: 'relative',
 							}}
+							key={user.id}
 						>
 							<button
 								onClick={(e) => {
